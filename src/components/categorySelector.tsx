@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { categoryTable } from "@/db/schema";
 
 import { Button } from "./ui/button";
@@ -16,8 +18,9 @@ export function CategorySelector({ categorys }: ICategorySelectorProps) {
             <Button
               variant="ghost"
               className="h-full w-full rounded-2xl px-4 py-5 font-semibold"
+              asChild
             >
-              {category.name}
+              <Link href={`/category/${category.slug}`}>{category.name}</Link>
             </Button>
           </CardContent>
         </Card>

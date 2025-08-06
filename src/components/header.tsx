@@ -23,8 +23,8 @@ import {
 export function Header() {
   const { data: session } = authClient.useSession();
   return (
-    <header className="flex w-full p-4 text-white">
-      <div>
+    <header className="bg-accent fixed top-0 left-0 z-50 flex h-[80px] w-full rounded-b-md p-4 text-white">
+      <div className="">
         <Link href="/" className="text-2xl font-bold">
           Ecommerce Wabber Bootcamp
         </Link>

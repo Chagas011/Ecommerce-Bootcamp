@@ -1,3 +1,8 @@
+"use client";
+
+import { createAuthClient } from "better-auth/react";
+import { useRouter } from "next/navigation";
+
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +11,18 @@ import { SignInForm } from "./components/sign-in-form";
 import { SignUpForm } from "./components/sign-up-form ";
 
 export default function Authentication() {
+  const router = useRouter();
+  const authClient = createAuthClient();
+  const handleSignWithGoogle = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+      },
+    });
+  };
   return (
     <>
       <Header />
@@ -22,21 +39,18 @@ export default function Authentication() {
                 <span className="text-muted-foreground text-sm">
                   Ou entre com
                 </span>
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSignWithGoogle}
+                  type="button"
+                >
                   G Google
                 </Button>
               </div>
             </TabsContent>
             <TabsContent value="sign-up">
               <SignUpForm />
-              <div className="mt-4 flex items-center justify-center gap-2">
-                <span className="text-muted-foreground text-sm">
-                  Ou crie uma conta com
-                </span>
-                <Button variant="outline" size="sm">
-                  G Google
-                </Button>
-              </div>
             </TabsContent>
           </Tabs>
         </div>

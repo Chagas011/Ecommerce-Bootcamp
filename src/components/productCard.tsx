@@ -24,8 +24,6 @@ export function ProductCard({ products, title }: IProductCardProps) {
           const variant = product.variants[0];
           const rawImage = variant.imageUrl;
 
-          console.log("rawImage:", rawImage);
-
           let imageUrl = rawImage;
 
           if (
@@ -40,14 +38,14 @@ export function ProductCard({ products, title }: IProductCardProps) {
             typeof imageUrl === "string" && imageUrl.startsWith("https");
 
           return (
-            <Card key={product.id}>
-              <CardContent>
+            <Card key={product.id} className="min-w-[220px]">
+              <CardContent className="flex justify-center p-0">
                 {hasValidImage ? (
                   <Image
-                    src={encodeURI(imageUrl)}
-                    alt={variant.name}
+                    src={imageUrl}
                     width={200}
                     height={200}
+                    alt="..."
                     className="rounded-3xl"
                   />
                 ) : (
