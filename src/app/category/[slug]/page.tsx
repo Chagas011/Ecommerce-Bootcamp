@@ -1,9 +1,11 @@
 import { eq } from "drizzle-orm";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { db } from "@/db";
 import { categoryTable, productTable } from "@/db/schema";
@@ -54,8 +56,11 @@ export default async function CategoryPage({ params }: ICategoryPageProps) {
             typeof imageUrl === "string" && imageUrl.startsWith("https");
 
           return (
-            <Card className="min-w-[220px] p-0" key={product.id}>
-              <CardContent className="flex items-center justify-center py-2">
+            <Card
+              className="flex min-w-[220px] justify-center"
+              key={product.id}
+            >
+              <CardContent className="flex items-center justify-center px-2 py-2">
                 {hasValidImage ? (
                   <Image
                     src={imageUrl}
@@ -71,15 +76,21 @@ export default async function CategoryPage({ params }: ICategoryPageProps) {
                 )}
               </CardContent>
 
-              <CardFooter>
+              <CardFooter className="justify-center px-4">
                 <div className="flex max-w-[400px] flex-col gap-1">
                   <p className="truncate text-xl font-medium">{product.name}</p>
                   <p className="text-muted-foreground text-xs font-medium">
                     {product.description}
                   </p>
-                  <p className="text-lg font-bold">
-                    {formatCentsToBRL(variant.priceInCents)}
-                  </p>
+                  <div className="mt-3 flex items-center justify-between">
+                    <p className="text-lg font-bold">
+                      {formatCentsToBRL(variant.priceInCents)}
+                    </p>
+
+                    <Button asChild>
+                      <Link href={`/product-variant/${variant.slug}`}>Ver</Link>
+                    </Button>
+                  </div>
                 </div>
               </CardFooter>
             </Card>

@@ -26,28 +26,28 @@ export default async function Home() {
     <div>
       <Header />
       <div className="space-y-6 px-5 pt-[120px]">
-        <Image
-          src="/banner01.png"
-          alt="leve uma vida com estilo"
-          width={0}
-          height={0}
-          sizes="100vm"
-          className="h-auto w-full lg:h-[600px]"
-        />
+        <div className="relative h-[720px] w-full rounded-3xl">
+          <Image
+            src="/banner01.png"
+            alt=""
+            fill
+            className="h-auto w-full rounded-3xl object-contain"
+          />
+        </div>
         {/*IMPLEMENTAR MARCAS PARCEIRAS*/}
         <ProductCard products={products} title="Mais vendidos" />
         <div className="text-center">
           <CategorySelector categorys={categorys} />
         </div>
 
-        <Image
-          src="/banner02.png"
-          alt="leve uma vida com estilo"
-          width={0}
-          height={0}
-          sizes="100vm"
-          className="h-auto w-full lg:h-[600px]"
-        />
+        <div className="relative h-[720px] w-full rounded-3xl">
+          <Image
+            src="/banner02.png"
+            alt=""
+            fill
+            className="h-auto w-full rounded-3xl object-contain"
+          />
+        </div>
 
         <ProductCard products={newlyCreatedProducts} title="Novidades" />
       </div>
