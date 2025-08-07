@@ -10,6 +10,7 @@ import { db } from "@/db";
 import { productTable, productVariantTable } from "@/db/schema";
 import { formatCentsToBRL } from "@/lib/utils";
 
+import { QuantitySelector } from "./components/quantity-selector";
 import { VariantSelector } from "./components/variant-selector";
 
 interface IProductVariantProps {
@@ -68,7 +69,9 @@ export default async function ProductPage({ params }: IProductVariantProps) {
           </h3>
         </div>
 
-        <div className="px-5">{/*Quantidade */}</div>
+        <div className="px-5">
+          <QuantitySelector />
+        </div>
 
         <div className="flex w-full flex-col justify-center space-y-3 px-5">
           <Button variant={"outline"} className="w-full py-7 font-semibold">

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { authClient } from "@/lib/auth-client";
 
+import { Cart } from "./cart";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -33,7 +34,7 @@ export function Header() {
       <div className="flex flex-1 items-center justify-end gap-4">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant={"outline"}>
               <MenuIcon />
             </Button>
           </SheetTrigger>
@@ -107,6 +108,7 @@ export function Header() {
             )}
           </SheetContent>
         </Sheet>
+        <Cart />
       </div>
     </header>
   );
