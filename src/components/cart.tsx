@@ -1,3 +1,5 @@
+"use client";
+
 import { ShoppingBag, ShoppingCartIcon } from "lucide-react";
 
 import {
