@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ShoppingBag, ShoppingCartIcon } from "lucide-react";
+import Link from "next/link";
 
 import { getCart } from "@/actions/get-cart";
 import {
@@ -62,11 +63,11 @@ export function Cart() {
             <p className="font-bold">GRATIS</p>
           </div>
           <div className="mt-5 flex w-full flex-col justify-center space-y-3 px-5">
-            <Button variant={"default"} className="w-full py-7">
-              Finalizar a compra
+            <Button variant={"default"} className="w-full py-7" asChild>
+              <Link href="/cart/identification">Finalizar a compra</Link>
             </Button>
-            <Button variant={"ghost"} className="w-full py-7">
-              Continuar comprando
+            <Button variant={"ghost"} className="w-full py-7" asChild>
+              <SheetTrigger>Continuar comprando</SheetTrigger>
             </Button>
           </div>
         </SheetFooter>

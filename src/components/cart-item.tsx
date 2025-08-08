@@ -3,6 +3,8 @@ import { MinusIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
+import { decreseItemCart } from "@/actions/decrese-cart-product-quantity";
+import { incrementItemCart } from "@/actions/increment-cart-product-quantity";
 import { removeProductCart } from "@/actions/remove-cart-product";
 import { formatCentsToBRL } from "@/lib/utils";
 
@@ -37,6 +39,28 @@ export function CartItem({
       toast.error("Error ao remover o produto");
     },
   });
+
+  const { mutate: decreseItem } = useMutation({
+    mutationKey: ["decrese-item-cart"],
+    mutationFn: () => decreseItemCart({ cartItemId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: () => {
+      toast.error("Error ao remover o produto");
+    },
+  });
+
+  const { mutate: incrementItem } = useMutation({
+    mutationKey: ["increment-item-cart"],
+    mutationFn: () => incrementItemCart({ cartItemId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: () => {
+      toast.error("Error ao remover o produto");
+    },
+  });
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -53,11 +77,11 @@ export function CartItem({
           <p>{productVariantName}</p>
 
           <div className="flex w-[100px] items-center justify-between">
-            <Button onClick={() => {}} className="h-8 w-8">
+            <Button onClick={() => decreseItem()} className="h-8 w-8">
               <MinusIcon />
             </Button>
             <p>{quantity}</p>
-            <Button onClick={() => {}} className="h-8 w-8">
+            <Button onClick={() => incrementItem()} className="h-8 w-8">
               <PlusIcon />
             </Button>
           </div>

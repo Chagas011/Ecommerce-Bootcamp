@@ -8,12 +8,13 @@ import { db } from "@/db";
 import { cartItemTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import { removeCartProduct } from "./schema";
+import {
+  DecreseCartProductQuantitySchema,
+  decreseCartProductQuantitySchema,
+} from "./schema";
 
-export async function removeProductCart(
-  data: z.infer<typeof removeCartProduct>,
-) {
-  removeCartProduct.parse(data);
+export async function decreseItemCart(data: DecreseCartProductQuantitySchema) {
+  decreseCartProductQuantitySchema.parse(data);
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -35,5 +36,12 @@ export async function removeProductCart(
     throw new Error("Unauthorized");
   }
 
-  await db.delete(cartItemTable).where(eq(cartItemTable.id, cartItem.id));
+  if (cartItem.quantity === 1) {
+    await db.delete(cartItemTable).where(eq(cartItemTable.id, cartItem.id));
+    return;
+  }
+  await db
+    .update(cartItemTable)
+    .set({ quantity: cartItem.quantity - 1 })
+    .where(eq(cartItemTable.id, cartItem.id));
 }
