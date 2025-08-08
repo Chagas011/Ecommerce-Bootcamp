@@ -1,13 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { InferSelectModel } from "drizzle-orm";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 
 import { createShippingAddress } from "@/actions/add-adress";
+import { updateAddressCart } from "@/actions/update-cart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -21,11 +23,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { shippingAddressTable } from "@/db/schema";
 
 import { AddressSchema, addressSchema } from "../schema";
+export type ShippingAddress = InferSelectModel<typeof shippingAddressTable>;
+interface IAddressesProp {
+  addresses: ShippingAddress[];
+}
 
-export function Addresses() {
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+export function Addresses({ addresses }: IAddressesProp) {
+  const queryClient = useQueryClient();
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(
+    "add_new",
+  );
   const form = useForm<AddressSchema>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
@@ -48,12 +58,31 @@ export function Addresses() {
     onSuccess: () => {
       toast.success("Endereco cadastrado");
       form.reset();
-      setSelectedAddress(null);
+      setSelectedAddress("add_new");
     },
     onError: () => {
       toast.error("Erro ao cadastrar endereço");
     },
   });
+
+  const { mutate: updateShippingAddressCart } = useMutation({
+    mutationKey: ["update-cart-shipping-address"],
+    mutationFn: () =>
+      selectedAddress && selectedAddress !== "add_new"
+        ? updateAddressCart({ addressId: selectedAddress })
+        : Promise.reject("Endereço não selecionado"),
+
+    onSuccess: () => {
+      toast.success("Endereco Adicionado ao Pedido");
+      queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
+    },
+    onError: () => {
+      toast.error("Nao foi possivel adicionar o endereco ao pedido");
+    },
+  });
+
   function onSubmit(data: AddressSchema) {
     mutate(data);
   }
@@ -65,6 +94,28 @@ export function Addresses() {
       </CardHeader>
       <CardContent>
         <RadioGroup value={selectedAddress} onValueChange={setSelectedAddress}>
+          {addresses.map((address) => (
+            <Card key={address.id}>
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value={address.id} id={address.id} />
+                  <Label htmlFor={address.id}>
+                    <p className="text-sm font-semibold">
+                      {address.recipientname}: {address.address},{" "}
+                      {address.number} - {address.city}/{address.state} -{" "}
+                      {address.neighborhood} - CEP: {address.zipCode}
+                    </p>
+                  </Label>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </RadioGroup>
+        <RadioGroup
+          value={selectedAddress}
+          onValueChange={setSelectedAddress}
+          className="mt-8"
+        >
           <Card>
             <CardContent>
               <div className="flex items-center gap-3">
@@ -314,12 +365,22 @@ export function Addresses() {
                     className="mt-3 w-full py-6"
                     disabled={isPending}
                   >
-                    Continuar com o pagamento
+                    Salvar endereço
                   </Button>
                 </form>
               </Form>
             </div>
           </>
+        )}
+
+        {selectedAddress !== "add_new" && (
+          <Button
+            type="button"
+            className="mt-3 w-full py-6"
+            onClick={() => updateShippingAddressCart()}
+          >
+            Continuar para pagamento
+          </Button>
         )}
       </CardContent>
     </Card>

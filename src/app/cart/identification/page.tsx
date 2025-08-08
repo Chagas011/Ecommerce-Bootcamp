@@ -7,7 +7,7 @@ import { db } from "@/db";
 import { cartTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import { Addresses } from "./components/addresses";
+import { AddressSection } from "./components/address-section";
 
 export default async function IdentificationPage() {
   const session = await auth.api.getSession({
@@ -33,7 +33,7 @@ export default async function IdentificationPage() {
       <Header />
 
       <div className="px-5 pt-24">
-        <Addresses />
+        <AddressSection />
       </div>
     </>
   );
