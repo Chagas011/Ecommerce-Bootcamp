@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferSelectModel } from "drizzle-orm";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
@@ -32,6 +33,7 @@ interface IAddressesProp {
 }
 
 export function Addresses({ addresses }: IAddressesProp) {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [selectedAddress, setSelectedAddress] = useState<string | null>(
     "add_new",
@@ -77,6 +79,7 @@ export function Addresses({ addresses }: IAddressesProp) {
       queryClient.invalidateQueries({
         queryKey: ["cart"],
       });
+      router.push("/cart/confirmation");
     },
     onError: () => {
       toast.error("Nao foi possivel adicionar o endereco ao pedido");
