@@ -1,10 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
+import { toast } from "sonner";
 
+import { createShippingAddress } from "@/actions/add-adress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -22,6 +25,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AddressSchema, addressSchema } from "../schema";
 
 export function Addresses() {
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const form = useForm<AddressSchema>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
@@ -34,14 +38,25 @@ export function Addresses() {
       number: "",
       phone: "",
       state: "",
-      street: "",
+      address: "",
       zipCode: "",
     },
   });
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["create-shipping-address"],
+    mutationFn: (data: AddressSchema) => createShippingAddress(data),
+    onSuccess: () => {
+      toast.success("Endereco cadastrado");
+      form.reset();
+      setSelectedAddress(null);
+    },
+    onError: () => {
+      toast.error("Erro ao cadastrar endereço");
+    },
+  });
   function onSubmit(data: AddressSchema) {
-    console.log(data);
+    mutate(data);
   }
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
 
   return (
     <Card>
@@ -120,6 +135,7 @@ export function Addresses() {
                             <PatternFormat
                               customInput={Input}
                               format="###.###.###-##"
+                              mask="_"
                               allowEmptyFormatting
                               placeholder="000.000.000-00"
                               {...field}
@@ -139,6 +155,7 @@ export function Addresses() {
                             <PatternFormat
                               customInput={Input}
                               format="(##) #####-####"
+                              mask="_"
                               allowEmptyFormatting
                               placeholder="(11) 99999-9999"
                               {...field}
@@ -153,17 +170,18 @@ export function Addresses() {
                     control={form.control}
                     name="zipCode"
                     render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>CEP</FormLabel>
+                      <FormItem>
+                        <FormLabel>Cep</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Digite seu CEP"
+                          <PatternFormat
+                            customInput={Input}
+                            format="#####-###"
+                            mask="_"
+                            allowEmptyFormatting
+                            placeholder="00000-000"
                             {...field}
-                            type="text"
-                            className="py-6"
                           />
                         </FormControl>
-
                         <FormMessage />
                       </FormItem>
                     )}
@@ -171,7 +189,7 @@ export function Addresses() {
 
                   <FormField
                     control={form.control}
-                    name="street"
+                    name="address"
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormLabel>Endereço</FormLabel>
@@ -291,7 +309,11 @@ export function Addresses() {
                     />
                   </div>
 
-                  <Button type="submit" className="mt-3 w-full py-6">
+                  <Button
+                    type="submit"
+                    className="mt-3 w-full py-6"
+                    disabled={isPending}
+                  >
                     Continuar com o pagamento
                   </Button>
                 </form>
