@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ShoppingBag, ShoppingCartIcon } from "lucide-react";
-import Image from "next/image";
 
 import { getCart } from "@/actions/get-cart";
 import {
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { formatCentsToBRL } from "@/lib/utils";
 
+import { CartItem } from "./cart-item";
 import { Button } from "./ui/button";
 export function Cart() {
   const { data: cart, isPending } = useQuery({
@@ -37,35 +37,29 @@ export function Cart() {
             </div>
           </SheetTitle>
         </SheetHeader>
-        <div>
+        <div className="space-y-4 px-5">
           {isPending && <div>Carregando...</div>}
           {cart?.items.map((item) => (
-            <div key={item.id}>
-              <Image
-                src={item.productVariant.imageUrl}
-                alt={item.productVariant.product.name}
-                width={100}
-                height={100}
-              />
-              <div>
-                <h3>{item.productVariant.product.name}</h3>
-              </div>
-            </div>
+            <CartItem
+              key={item.id}
+              id={item.id}
+              productName={item.productVariant.product.name}
+              productVariantImageUrl={item.productVariant.imageUrl}
+              productVariantName={item.productVariant.name}
+              productVariantPrice={item.productVariant.priceInCents}
+              quantity={item.quantity}
+            />
           ))}
         </div>
 
         <SheetFooter>
           <div className="flex justify-between">
             <h4 className="font-semibold">Subtotal</h4>
-            <p>
-              {cart &&
-                formatCentsToBRL(
-                  cart?.items.reduce(
-                    (acc, item) => acc + item.productVariant.priceInCents,
-                    0,
-                  ),
-                )}
-            </p>
+            <p>{cart && formatCentsToBRL(cart.totalPriceInCents)}</p>
+          </div>
+          <div className="flex justify-between">
+            <h4 className="font-semibold">Entrega</h4>
+            <p className="font-bold">GRATIS</p>
           </div>
           <div className="mt-5 flex w-full flex-col justify-center space-y-3 px-5">
             <Button variant={"default"} className="w-full py-7">
