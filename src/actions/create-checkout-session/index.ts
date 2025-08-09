@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import Stripe from "stripe";
 
 import { db } from "@/db";
-import { cartItemTable, cartTable, orderTable } from "@/db/schema";
+import { orderItemTable, orderTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import { CheckoutSessionSchema, checkoutSessionSchema } from "./schema";
@@ -21,7 +21,7 @@ export async function createCheckoutSession(data: CheckoutSessionSchema) {
   if (!session?.user) {
     throw new Error("Unauthorized");
   }
-  const { cartId, orderId } = checkoutSessionSchema.parse(data);
+  const { orderId } = checkoutSessionSchema.parse(data);
 
   const order = await db.query.orderTable.findFirst({
     where: eq(orderTable.id, orderId),
@@ -34,18 +34,9 @@ export async function createCheckoutSession(data: CheckoutSessionSchema) {
   if (order.userId !== session.user.id) {
     throw new Error("Unauthorized");
   }
-  const cart = await db.query.cartTable.findFirst({
-    where: eq(cartTable.id, cartId),
-  });
 
-  if (!cart) {
-    throw new Error("Cart not found");
-  }
-  if (cart.userId !== session.user.id) {
-    throw new Error("Unauthorized");
-  }
-  const cartItems = await db.query.cartItemTable.findMany({
-    where: eq(cartItemTable.cartId, cartId),
+  const ordersItems = await db.query.orderItemTable.findMany({
+    where: eq(orderItemTable.orderId, orderId),
     with: {
       productVariant: {
         with: {
@@ -61,20 +52,20 @@ export async function createCheckoutSession(data: CheckoutSessionSchema) {
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/cancel`,
     metadata: { orderId },
-    line_items: cartItems.map((cartItem) => {
+    line_items: ordersItems.map((orderItem) => {
       return {
         price_data: {
           currency: "brl",
           product_data: {
-            name: `${cartItem.productVariant.product.name} - ${cartItem.productVariant.name}`,
-            description: cartItem.productVariant.product.description,
-            images: [cartItem.productVariant.imageUrl],
+            name: `${orderItem.productVariant.product.name} - ${orderItem.productVariant.name}`,
+            description: orderItem.productVariant.product.description,
+            images: [orderItem.productVariant.imageUrl],
           },
 
-          unit_amount: cartItem.productVariant.priceInCents,
+          unit_amount: orderItem.priceInCents,
         },
 
-        quantity: cartItem.quantity,
+        quantity: orderItem.quantity,
       };
     }),
   });

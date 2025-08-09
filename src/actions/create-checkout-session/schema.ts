@@ -1,7 +1,6 @@
 import z from "zod";
 
 export const checkoutSessionSchema = z.object({
-  cartId: z.uuid(),
   orderId: z.uuid(),
 });
 
