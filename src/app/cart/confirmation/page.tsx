@@ -4,13 +4,13 @@ import { redirect } from "next/navigation";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db";
 import { cartTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import { CartSumary } from "../components/cart-sumary";
+import { FinishOrderButton } from "./components/finishOrderButton";
 export default async function ConfirmationPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -70,7 +70,7 @@ export default async function ConfirmationPage() {
               </CardContent>
             </Card>
 
-            <Button className="mt-6 w-full py-6">Finalizar Compra</Button>
+            <FinishOrderButton />
           </CardContent>
         </Card>
       </div>
