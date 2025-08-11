@@ -34,7 +34,9 @@ export default function ChekoutSuccessPage() {
           </DialogDescription>
           <DialogFooter>
             <div className="flex w-full flex-col space-y-2">
-              <Button className="py-6">Ver meus pedido</Button>
+              <Button className="py-6">
+                <Link href="/my-orders/">Ver meus pedido</Link>
+              </Button>
               <Button className="py-6" variant={"ghost"} asChild>
                 <Link href="/">Pagina Inicial</Link>
               </Button>

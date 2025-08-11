@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -18,6 +19,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
@@ -56,8 +58,8 @@ export function Header() {
             </SheetHeader>
             {session?.user ? (
               <Card className="">
-                <CardContent>
-                  <div className="flex justify-between">
+                <CardContent className="px-1">
+                  <div className="flex justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <Avatar>
                         <AvatarImage
@@ -105,6 +107,14 @@ export function Header() {
                   </div>
                 </CardContent>
               </Card>
+            )}
+
+            {session?.user && (
+              <SheetFooter className="mb-10">
+                <Button asChild className="py-8">
+                  <Link href="/my-orders">Ver meus Pedidos</Link>
+                </Button>
+              </SheetFooter>
             )}
           </SheetContent>
         </Sheet>
