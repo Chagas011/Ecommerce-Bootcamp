@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { AlignLeftIcon, ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
