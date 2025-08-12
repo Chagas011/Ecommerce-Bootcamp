@@ -31,7 +31,7 @@ export function ProductActions({ productVariantId }: IProductActionsProps) {
         </div>
       </div>
 
-      <div className="flex w-full flex-col justify-center space-y-3 px-5">
+      <div className="mt-3 flex w-full flex-col justify-center space-y-3 px-5">
         <AddToCartButton
           productVariantId={productVariantId}
           quantity={quantity}

@@ -16,6 +16,9 @@ export default function ChekoutSuccessPage() {
   return (
     <>
       <Header />
+      <div className="hidden pt-24 lg:flex lg:justify-center">
+        <Image src="/progress3.png" width="649" height="10" alt="progress" />
+      </div>
       <Dialog open={true} onOpenChange={() => {}}>
         <DialogContent className="text-center">
           <Image

@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { Footer } from "@/components/footer";
@@ -45,23 +46,30 @@ export default async function IdentificationPage() {
   return (
     <>
       <Header />
-
-      <div className="space-y-4 px-5 pt-24">
-        <AddressSection />
-        <CartSumary
-          subtotalInCents={cartTotalPrice}
-          totalInCents={cartTotalPrice}
-          products={cart.items.map((item) => ({
-            id: item.id,
-            productName: item.productVariant.product.name,
-            variantName: item.productVariant.name,
-            quantity: item.quantity,
-            priceInCents: item.productVariant.priceInCents,
-            imageUrl: item.productVariant.imageUrl,
-          }))}
-        />
+      <div className="hidden pt-24 lg:flex lg:justify-center">
+        <Image src="/progress.png" width="649" height="10" alt="progress" />
       </div>
-      <div className="mt-12">
+
+      <div className="space-y-4 px-5 pt-24 lg:grid lg:grid-cols-2 lg:gap-4 lg:pt-8">
+        <div>
+          <AddressSection />
+        </div>
+        <div>
+          <CartSumary
+            subtotalInCents={cartTotalPrice}
+            totalInCents={cartTotalPrice}
+            products={cart.items.map((item) => ({
+              id: item.id,
+              productName: item.productVariant.product.name,
+              variantName: item.productVariant.name,
+              quantity: item.quantity,
+              priceInCents: item.productVariant.priceInCents,
+              imageUrl: item.productVariant.imageUrl,
+            }))}
+          />
+        </div>
+      </div>
+      <div className="mt-12 lg:mt-[248px]">
         <Footer />
       </div>
     </>

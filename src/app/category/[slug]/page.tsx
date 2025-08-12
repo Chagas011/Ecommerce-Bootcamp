@@ -34,7 +34,7 @@ export default async function CategoryPage({ params }: ICategoryPageProps) {
     <div>
       <Header />
 
-      <div className="pt-[120px]">
+      <div className="px-5 pt-[120px]">
         <h2 className="text-2xl font-semibold">Categoria: {category.name}</h2>
       </div>
       <div className="mt-10 grid grid-cols-1 gap-4 space-y-4 px-4 md:grid-cols-2 lg:grid-cols-3">
