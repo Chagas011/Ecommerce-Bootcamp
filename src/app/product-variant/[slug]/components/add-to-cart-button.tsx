@@ -21,11 +21,18 @@ export function AddToCartButton({
   const router = useRouter();
   const mutation = useMutation({
     mutationKey: ["addProductToCart", productVariantId, quantity],
-    mutationFn: () =>
-      addProductToCart({
+    mutationFn: async () => {
+      const res = await addProductToCart({
         productVariantId,
         quantity,
-      }),
+      });
+
+      if (res?.error) {
+        throw new Error(res.message);
+      }
+
+      return res;
+    },
 
     onSuccess: () => {
       toast.success("Produto adicionado ao carrinho");

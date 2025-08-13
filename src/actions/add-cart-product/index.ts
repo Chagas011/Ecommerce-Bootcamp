@@ -16,7 +16,7 @@ export async function addProductToCart(data: AddProductToCartSchema) {
   });
 
   if (!session?.user) {
-    throw new Error("Unauthorized");
+    return { error: true, message: "Unauthorized" };
   }
 
   const productVariant = await db.query.productVariantTable.findFirst({
